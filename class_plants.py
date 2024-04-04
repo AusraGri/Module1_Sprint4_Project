@@ -1,37 +1,11 @@
 import re
 
-
 class Plant:
-    def __init__(
-        self,
-        comm_name: str,
-        scient_name: str,
-        plant_type: str,
-        height: int,
-        sowing: str,
-        flowering: str,
-        color: str,
-        info: str,
-    ) -> None:
-        self.name: str = comm_name
-        self.scientific_name: str = scient_name
-        self.plant_type: str = plant_type
-        self.height: int = height
-        self.sowing_time: str = sowing
-        self.flowering: str = flowering
-        self.color: str = color
-        self.info: str = info
-
-    # plant = {
-    #         "Common Name" : name,
-    #         "Scientific Name" : scient_name,
-    #         "Type" : plant_type,
-    #         "Height" : height,
-    #         "Sowing" : sowing_time,
-    #         "Flowering" : flowering_time,
-    #         "Color" : plant_color,
-    #         "Additional Information" : add_info,
-    #     }
+    def __init__(self, dictionary:dict[str,str]) -> None:
+        for key, value in dictionary.items():
+            attr_name: str = key.replace(" ", "_").lower()
+            setattr(self, attr_name, value)
+    
 
 
 class PlantInfo:
@@ -46,16 +20,17 @@ class PlantInfo:
         flowering_time: str = PlantInfo.get_flowering_time()
         plant_color: str = PlantInfo.get_color()
         add_info: str = PlantInfo.get_additional_info()
-        return Plant(
-            name,
-            scient_name,
-            plant_type,
-            height,
-            sowing_time,
-            flowering_time,
-            plant_color,
-            add_info,
-        )
+        plant_info: dict = {
+            "Name" : name,
+            "Scientific Name" : scient_name,
+            "Type" : plant_type,
+            "Height" : height,
+            "Sowing" : sowing_time,
+            "Flowering" : flowering_time,
+            "Color" : plant_color,
+            "Additional Information" : add_info,
+        }
+        return Plant(plant_info)
 
     @staticmethod
     def get_common_name() -> str:
@@ -253,7 +228,7 @@ print(p.color)
 print(p.name)
 print(p.flowering)
 print(p.height)
-print(p.plant_type)
+print(p.type)
 print(p.scientific_name)
-print(p.sowing_time)
-print(p.info)
+print(p.sowing)
+print(p.additional_information)
