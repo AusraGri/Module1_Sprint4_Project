@@ -9,9 +9,12 @@ class Plant:
 
 
 class PlantInfo:
-
+    
     @classmethod
     def create(cls) -> Plant:
+        plant_count: int = cls.get_plant_count()
+        plant_id: str = f"{plant_count + 1:03d}"
+        cls.save_plant_count(plant_count + 1)
         name: str = PlantInfo.get_common_name()
         scient_name: str = PlantInfo.get_scientific_name()
         plant_type: str = PlantInfo.get_plant_type()
@@ -21,6 +24,7 @@ class PlantInfo:
         plant_color: str = PlantInfo.get_color()
         add_info: str = PlantInfo.get_additional_info()
         plant_info: dict = {
+            "Id": plant_id,
             "Name" : name,
             "Scientific Name" : scient_name,
             "Type" : plant_type,
@@ -221,14 +225,27 @@ class PlantInfo:
         patt = r"^(?:(?!(\b\d+\b).*\b\1\b)(1[0-2]|[1-9])\b(?:\s|$)){1,12}$"
         month_list: str = PlantInfo.get_answer(months, patt, "Number")
         return month_list
+    
+    @staticmethod
+    def get_plant_count() -> int:
+        try:
+            with open("plant_count.txt", "r") as file:
+                return int(file.read().strip())
+        except FileNotFoundError:
+            return 0  # If the file doesn't exist, start from 0
 
+    @staticmethod
+    def save_plant_count(count: int) -> None:
+        with open("plant_count.txt", "w") as file:
+            file.write(str(count))
 
-p: Plant = PlantInfo.create()
-print(p.color)
-print(p.name)
-print(p.flowering)
-print(p.height)
-print(p.type)
-print(p.scientific_name)
-print(p.sowing)
-print(p.additional_information)
+# p: Plant = PlantInfo.create()
+# print(p.id)
+# print(p.color)
+# print(p.name)
+# print(p.flowering)
+# print(p.height)
+# print(p.type)
+# print(p.scientific_name)
+# print(p.sowing)
+# print(p.additional_information)
