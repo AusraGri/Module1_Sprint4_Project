@@ -1,3 +1,4 @@
 # Ignored files
 test.py
 README_demo.md
+*.json
