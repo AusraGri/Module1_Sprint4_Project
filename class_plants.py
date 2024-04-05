@@ -1,14 +1,40 @@
 import re
+from helpers import Sep
 
 class Plant:
     def __init__(self, dictionary:dict[str,str]) -> None:
         for key, value in dictionary.items():
             attr_name: str = key.replace(" ", "_").lower()
             setattr(self, attr_name, value)
+            
+    def to_dict(self) -> dict:
+        return self.__dict__
+    
+    
+    def print_plant(self) -> None:
+        plant: dict[str,str] = {
+            "Name" : self.name,
+            "Scientific Name" : self.scientific_name,
+            "Type" : self.type,
+            "Height" : self.height,
+            "Sowing" : self.sowing,
+            "Flowering" : self.flowering,
+            "Color" : self.color,
+            "Light" : self.light,
+            "Additional Information" : self.additional_information,
+        }
+        for key, value in plant.items():
+            print(f"{key} - {value}")
+        
+        
     
 
 
 class PlantInfo:
+    s: str = "=" * 36
+    c: str = "- " * 18
+    def __init__(self) -> None:
+        self.plant: Plant = self.create()
     
     @classmethod
     def create(cls) -> Plant:
@@ -22,6 +48,7 @@ class PlantInfo:
         sowing_time: str = PlantInfo.get_sowing_time()
         flowering_time: str = PlantInfo.get_flowering_time()
         plant_color: str = PlantInfo.get_color()
+        light: str = PlantInfo.get_lighting()
         add_info: str = PlantInfo.get_additional_info()
         plant_info: dict = {
             "Id": plant_id,
@@ -32,13 +59,16 @@ class PlantInfo:
             "Sowing" : sowing_time,
             "Flowering" : flowering_time,
             "Color" : plant_color,
+            "Light" : light,
             "Additional Information" : add_info,
         }
         return Plant(plant_info)
 
     @staticmethod
     def get_common_name() -> str:
+        print(PlantInfo.s)
         print("Please enter your plants common name")
+        print(PlantInfo.c)
         while True:
             c_name: str = input("Plant common name: ")
             if len(c_name) > 1 and re.match(r"^(\w+ ?)+$", c_name):
@@ -46,10 +76,12 @@ class PlantInfo:
 
     @staticmethod
     def get_scientific_name() -> str:
+        print(PlantInfo.s)
         print(
             "Please enter your plants scientific (latin) name \n"
-            "If don't know scientific name, just press 'Enter'"
+            "If you don't know scientific name, just press 'Enter'"
         )
+        print(PlantInfo.c)
         while True:
             s_name: str = input("Plant scientific name: ")
             if s_name and re.match(r"^(\w+ ?)+$", s_name):
@@ -59,6 +91,8 @@ class PlantInfo:
 
     @staticmethod
     def get_plant_type() -> str:
+        print(PlantInfo.s)
+        print("Choose the plant type")
         plant_types: dict[str, int] = {
             "Annual": 1,
             "Biennial": 2,
@@ -71,9 +105,7 @@ class PlantInfo:
             "Alpine": 9,
             "Grass": 10,
         }
-        print("Choose the plant type")
-        for p_type, value in plant_types.items():
-            print(f"{value} - {p_type}")
+        PlantInfo.print_listed(plant_types)
         while True:
             try:
                 plant_type: int = int(input("Choose plant type by number: "))
@@ -87,12 +119,14 @@ class PlantInfo:
 
     @staticmethod
     def get_plant_height() -> int:
+        print(PlantInfo.s)
         print(
             "Please enter your plants height in centimeters \n"
             "If you have range of height, e.g. 20 - 30, \n"
             "enter both values separated by space, e.g. '20 30' and program \n"
             "will calculate average height"
         )
+        print(PlantInfo.c)
         while True:
             try:
                 height: str = input("Plant height: ")
@@ -113,15 +147,18 @@ class PlantInfo:
 
     @staticmethod
     def get_sowing_time() -> str:
+        print(PlantInfo.s)
         print(
             "Please enter month's number for the plant's sowing time, e.g. '2' \n"
             "or if more months are awailable, numbers separated by space"
         )
+        print(PlantInfo.c)
         sowing_months: str = PlantInfo.get_month()
         return sowing_months
 
     @staticmethod
     def get_flowering_time() -> str:
+        print(PlantInfo.s)
         print(
             "Please enter month's number for the plant's blooming time, e.g. '2' \n"
             "or if more months are awailable, numbers separated by space"
@@ -132,6 +169,7 @@ class PlantInfo:
 
     @staticmethod
     def get_color() -> str:
+        print(PlantInfo.s)
         print(
             "choose the color that best describes the color of the bloom \n"
             "or the plant itself \n"
@@ -147,14 +185,14 @@ class PlantInfo:
             "Red": 6,
             "Purple": 7,
         }
-        for clr, value in plant_colors.items():
-            print(f"{value} - {clr}")
-        patt = r"^(?!([1-7])\s.*\1\s)(?:[1-7]\s?){1,7}$"
+        PlantInfo.print_listed(plant_colors)
+        patt = r"^^(?!.*\b(\d)\s*\1\b)(?:[1-7]\s?){1,7}$"
         plant_colors = PlantInfo.get_answer(plant_colors, patt, "Color")
         return plant_colors
 
     @staticmethod
     def get_lighting() -> str:
+        print(PlantInfo.s)
         print(
             "Choose fitting light conditions for the plant \n"
             "e.g. '2' or for multiple, numbers separated by space '2 3'"
@@ -165,17 +203,18 @@ class PlantInfo:
             "Part Shade": 3,
             "Full Shade": 4,
         }
-        for light, value in light_conditions.items():
-            print(f"{value} - {light}")
-        patt = r"^(?!([1-4])\s.*\1\s)(?:[1-4]\s){1,4}$"
+        PlantInfo.print_listed(light_conditions)
+        patt = r"^(?!.*\b(\d)\s*\1\b)(?:[1-4]\s?){1,4}$"
         plant_lighting: str = PlantInfo.get_answer(
-            light_conditions, patt, "Light conditions"
+            light_conditions, patt, "Light condition"
         )
         return plant_lighting
 
     @staticmethod
     def get_additional_info() -> str:
+        print(PlantInfo.s)
         print("Write here any additional informationa bout the plant if needed")
+        print(PlantInfo.c)
         info: str = input("Additional information: ")
         return info
 
@@ -201,7 +240,7 @@ class PlantInfo:
             for n in numbers:
                 if n == value:
                     final_list += key + ", "
-        final_list = final_list[:-1]
+        final_list = final_list[:-2]
         return final_list
 
     @staticmethod
@@ -220,8 +259,7 @@ class PlantInfo:
             "November": 11,
             "December": 12,
         }
-        for month, value in months.items():
-            print(f"{value} - {month}")
+        PlantInfo.print_listed(months)
         patt = r"^(?:(?!(\b\d+\b).*\b\1\b)(1[0-2]|[1-9])\b(?:\s|$)){1,12}$"
         month_list: str = PlantInfo.get_answer(months, patt, "Number")
         return month_list
@@ -238,6 +276,21 @@ class PlantInfo:
     def save_plant_count(count: int) -> None:
         with open("plant_count.txt", "w") as file:
             file.write(str(count))
+            
+            
+    @staticmethod      
+    def print_listed(dictionary) -> None:
+        print(PlantInfo.c)
+        for name, value in dictionary.items():
+            print(f"{value} - {name}")
+        print(PlantInfo.c)
+        
+    # def print_plant(self, dictionary) -> None:
+    #     print(PlantInfo.c)
+    #     for name, value in dictionary.items():
+    #         print(f"{name} - {value}")
+    #     print(PlantInfo.c)
+        
 
 # p: Plant = PlantInfo.create()
 # print(p.id)
