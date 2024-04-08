@@ -1,5 +1,6 @@
 import json
 import os
+import webbrowser
 # Sample data
 # data = [
 #     {"id": 1, "name": "John", "age": 30, "city": "New York"},
@@ -26,12 +27,33 @@ class DataHandler:
         with open(self.filename, "r") as file:
             return json.load(file)
         
+    def remove_entry(self, entry) -> None:
+        data = self.load_data()
+        if entry:
+            data.remove(entry)
+        else:
+            print("Entry not found.")
+        with open(self.filename, 'w') as file:
+            json.dump(data, file, indent=4)
+        
+        
     def update_data(self, new_data: dict) -> None:
         with open(self.filename, 'r') as file:
             data = json.load(file)
         data.append(new_data)
         with open(self.filename, 'w') as file:
             json.dump(data, file, indent=4)
+     
+    def text_editor(self, text) -> None:
+         with open("edit.txt", "w") as file:
+            file.write(text + "\n")
+            webbrowser.open("edit.txt")
+            
+    def read_text(self):
+        with open("edit.txt", "r") as file:
+            data: str = file.read()
+        
+        
  
 # d = DataHandler("data.json")
 # d.update_data(data1)

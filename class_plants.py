@@ -14,6 +14,7 @@ class Plant:
     def print_plant(self) -> None:
         plant: dict[str,str] = {
             "Name" : self.name,
+            "Variety" : self.variety,
             "Scientific Name" : self.scientific_name,
             "Type" : self.type,
             "Height" : self.height,
@@ -27,8 +28,6 @@ class Plant:
             print(f"{key} - {value}")
         
         
-    
-
 
 class PlantInfo:
     s: str = "=" * 36
@@ -42,6 +41,7 @@ class PlantInfo:
         plant_id: str = f"{plant_count + 1:03d}"
         cls.save_plant_count(plant_count + 1)
         name: str = PlantInfo.get_common_name()
+        variety: str = PlantInfo.get_variety_name()
         scient_name: str = PlantInfo.get_scientific_name()
         plant_type: str = PlantInfo.get_plant_type()
         height: int = PlantInfo.get_plant_height()
@@ -53,6 +53,7 @@ class PlantInfo:
         plant_info: dict = {
             "Id": plant_id,
             "Name" : name,
+            "Variety" : variety,
             "Scientific Name" : scient_name,
             "Type" : plant_type,
             "Height" : height,
@@ -73,6 +74,18 @@ class PlantInfo:
             c_name: str = input("Plant common name: ")
             if len(c_name) > 1 and re.match(r"^(\w+ ?)+$", c_name):
                 return c_name.strip()
+            
+    @staticmethod
+    def get_variety_name() -> str:
+        print(PlantInfo.s)
+        print("Please enter your variety name")
+        print(PlantInfo.c)
+        while True:
+            c_name: str = input("Variety name: ")
+            if len(c_name) > 1 and re.match(r"^(\w+ ?)+$", c_name):
+                return c_name.strip()
+    
+    
 
     @staticmethod
     def get_scientific_name() -> str:
@@ -84,7 +97,7 @@ class PlantInfo:
         print(PlantInfo.c)
         while True:
             s_name: str = input("Plant scientific name: ")
-            if s_name and re.match(r"^(\w+ ?)+$", s_name):
+            if s_name and re.match(r"^(\w+\.?-? ?)+$", s_name):
                 return s_name.strip()
             else:
                 return None

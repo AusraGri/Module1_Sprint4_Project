@@ -20,4 +20,3 @@ class Garden:
         for plant in self.garden:
             print(plant.name)
             
-    
