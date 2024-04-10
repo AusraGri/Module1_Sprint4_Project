@@ -1,4 +1,5 @@
 import sys
+from plant_data import plant_data
 
 
 def main():
@@ -21,8 +22,7 @@ def program_menu() -> None:
         "1": add_plants,
         "2": create_garden,
         "3": plant_database,
-        "4": edit_plant,
-        "5": exit_program,
+        "4": exit_program,
         "exit": exit_program,
     }
     while True:
@@ -37,14 +37,15 @@ def program_menu() -> None:
 def add_plants():
     ...
 
-def edit_plant():
-    ...
-
 def create_garden():
     print("garden")
     
 def plant_database():
     print("plant database")
+    action = plant_data()
+    if action == "done":
+        program_menu()
+    
     
 def exit_program():
     print("goodbye")

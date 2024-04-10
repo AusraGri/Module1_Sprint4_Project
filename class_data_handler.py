@@ -1,6 +1,7 @@
 import json
 import os
 import webbrowser
+import time
 # Sample data
 # data = [
 #     {"id": 1, "name": "John", "age": 30, "city": "New York"},
@@ -12,8 +13,8 @@ import webbrowser
 
 
 class DataHandler:
-    def __init__(self, filename) -> None:
-        self.filename = filename
+    def __init__(self, filename:str) -> None:
+        self.filename: str = filename
     
     def store_data(self, data) -> None:
         file_path: str = os.path.join(os.getcwd(), self.filename)
@@ -29,13 +30,14 @@ class DataHandler:
         
     def remove_entry(self, entry) -> None:
         data = self.load_data()
-        if entry:
-            data.remove(entry)
-        else:
-            print("Entry not found.")
+        for item in data:
+            if entry == item:
+                 data.remove(entry)
+            else:
+                print("Entry not found.")
         with open(self.filename, 'w') as file:
             json.dump(data, file, indent=4)
-        
+    
         
     def update_data(self, new_data: dict) -> None:
         with open(self.filename, 'r') as file:
@@ -52,6 +54,7 @@ class DataHandler:
     def read_text(self):
         with open("edit.txt", "r") as file:
             data: str = file.read()
+        return data
         
         
  

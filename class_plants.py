@@ -38,7 +38,7 @@ class PlantInfo:
     @classmethod
     def create(cls) -> Plant:
         plant_count: int = cls.get_plant_count()
-        plant_id: str = f"{plant_count + 1:03d}"
+        plant_id: str = f"{plant_count + 1:05d}"
         cls.save_plant_count(plant_count + 1)
         name: str = PlantInfo.get_common_name()
         variety: str = PlantInfo.get_variety_name()
