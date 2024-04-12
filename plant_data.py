@@ -6,8 +6,8 @@ import re
 import copy
 from command_tables import print_combined_command_tables
 
-"""This file manages over actions with plant database
-"""
+
+
 
 def plant_data() -> None | Literal['done']:
     """initializes manipulation with database
@@ -45,7 +45,7 @@ def other_commands() -> dict[str, str]:
     other: dict[str, str] = {
         "Reset To Main Data": "mdata:",
         "Export Data To PDF file":"export:pdf",
-        "Delete pland data": "delete:(plant id)",
+        "Delete plant data": "delete:(plant id)",
         "Edit plant data" : "edit:(plant id)",
         "Exit to Main Menu":"exit",
         "Print all Data": "adata:",
@@ -245,7 +245,7 @@ def numbered_dictionary(name:str, dictionary:dict) -> None:
 #         } 
 
   
-plant_data()
+# plant_data()
 # srt = sorting_menu()
 # ot = other_commands()             
 # big = command_panel(filters, srt, ot)

@@ -1,3 +1,4 @@
+from typing import Literal
 from class_data_handler import DataHandler
 from command_tables import tabulate
 from class_plants import Plant, PlantInfo
@@ -19,8 +20,7 @@ class PlantDataManager:
             print("No data to show")
             return
         number = 0
-        data_list = []
-        add_list=[]
+        plants_to_show = []
         for item in data:
             number += 1
             plant = Plant(item)
@@ -36,15 +36,19 @@ class PlantDataManager:
                 "Color" : plant.color,
                 "Light" : plant.light, 
             }
-            data_list.append(info)      
-        print(tabulate(data_list, headers = "keys", tablefmt="grid", maxcolwidths=35))
-        if len(data) == 1 and full is True:
-            info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
-            add_info = {
-                info : plant.additional_information
-            }
-            add_list.append(add_info)
-            print(tabulate(add_list, headers = "keys", tablefmt="grid", maxcolwidths=150))  
+            if full is True:
+                print(tabulate([info], headers = "keys", tablefmt="grid", maxcolwidths=35))
+            else:
+                plants_to_show.append(info)
+        if full is False:
+            print(tabulate(plants_to_show, headers = "keys", tablefmt="grid", maxcolwidths=35))
+            if full is True:
+                info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
+                add_info = {
+                    info : plant.additional_information
+                }
+                print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
+                print("=" * 20)
     
     def filter_by_attribute_key(self, plant_attribute:str, key:str, data=None) -> list[dict]:
         if data is None:
@@ -90,7 +94,6 @@ class PlantDataManager:
             else:
                 actual_filters.append(str(attr).lower())
         filters = set(actual_filters)
-        # if len(filters) > 1:
         if filters:
             unique_attr = PlantDataManager.set_to_string(filters)
             return unique_attr
@@ -196,7 +199,7 @@ class PlantDataManager:
     @staticmethod       
     def set_to_string(set_list):
         if all(isinstance(x, (int, float)) for x in set_list):
-            string: str = f" {min(set_list)} - {max(set_list)}"
+            string: list = [min(set_list), max(set_list)]
             return string   
         string = []
         sorted_list = sorted(set_list)
@@ -205,7 +208,7 @@ class PlantDataManager:
         return string
     
     @staticmethod
-    def editing_text():
+    def editing_text() -> Literal[True]:
         print("""
             Make changes to additional information and SAVE the file. 
             Did you make any changes in the editor?    

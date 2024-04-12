@@ -19,7 +19,7 @@ class DataHandler:
     def store_data(self, data) -> None:
         file_path: str = os.path.join(os.getcwd(), self.filename)
         if os.path.exists(file_path):
-            self.update_data(data)
+            self.add_data(data)
         else:
             with open(self.filename, "w") as json_file:
                 json.dump([data], json_file)
@@ -39,12 +39,34 @@ class DataHandler:
             json.dump(data, file, indent=4)
     
         
-    def update_data(self, new_data: dict) -> None:
+    def add_data(self, new_data: dict) -> None:
         with open(self.filename, 'r') as file:
             data = json.load(file)
         data.append(new_data)
         with open(self.filename, 'w') as file:
             json.dump(data, file, indent=4)
+            
+    def update_file(self, entry: dict):
+        with open(self.filename, 'r') as file:
+            data = json.load(file)
+        updated_data = []  
+        for item in data:
+            if entry["id"]:
+                if item["id"] == entry["id"]:
+                    item = entry
+            elif entry["garden_id"]:
+                if item["garden_id"] == entry["garden_id"]:
+                    item = entry
+            else:
+                break
+            updated_data.append(item)
+        with open(self.filename, 'w') as file:
+            json.dump(updated_data, file, indent=4)
+                
+                
+        
+        
+        
      
     def text_editor(self, text) -> None:
          with open("edit.txt", "w") as file:

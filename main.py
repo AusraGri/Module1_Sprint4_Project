@@ -3,7 +3,7 @@ from plant_data import plant_data
 
 
 def main():
-    ...
+    pass
     
 def program_menu() -> None:
     print("Main Menu")
@@ -50,3 +50,5 @@ def plant_database():
 def exit_program():
     print("goodbye")
     sys.exit()
+    
+    

@@ -3,6 +3,19 @@ from class_data_handler import DataHandler
 from helpers import Sep
 import sys
 
+# def add_new_plant() -> None:
+#     s = Sep()
+#     while True:
+#         plant_data = DataHandler("plants.json")
+#         plant_info = PlantInfo()
+#         s.line(35)
+#         plant_info.plant.print_plant()
+#         s.line(35)
+#         if confirm_plant():
+#             print("Plant was saved succesfully")
+#             plant:dict = plant_info.plant.to_dict()
+#             plant_data.store_data(plant)
+#         if not ask_for_next():
 def add_new_plant() -> None:
     s = Sep()
     while True:
@@ -41,4 +54,4 @@ def confirm_plant() -> bool:
         else:
             print("Invalid input")
     
-add_new_plant()    
+  
