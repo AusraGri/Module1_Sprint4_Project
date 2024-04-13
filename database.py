@@ -1,11 +1,8 @@
 from typing import Literal
 from class_data_handler import DataHandler
 from class_PlantDataManager import PlantDataManager
-from class_plants import Plant
-import re
 import copy
 from all_commands import data_commands, editing_commands
-from create_garden import activated_garden, active_garden
 
 """This file manages over actions with plant database
 """
@@ -16,12 +13,14 @@ def plant_data(garden=False) -> None | Literal['done']:
     Returns:
         "done":str: when all operations are done succesfully
     """
+    file = DataHandler("plants.json")
+    data = file.load_data()
     if garden is False:
-        file = DataHandler("plants.json")
-        data = file.load_data()
         action = manipulate_database(data)
     elif garden is True:
-        action = manipulate_database(data, garden=True)
+        garden_plants = manipulate_database(data, garden=True)
+        if garden_plants:
+            return garden_plants
     if action == 0:
             return "done"
  
@@ -39,6 +38,7 @@ def reload_data() -> list[dict]:
 
         
 def manipulate_database(data, garden=False) -> Literal[0]:
+    plants_for_garden = []
     while True:
         plant_data = PlantDataManager(data)
         filters: dict[str, str] = plant_data.get_actual_filters()
@@ -46,8 +46,10 @@ def manipulate_database(data, garden=False) -> Literal[0]:
             command = ask_for_action(filters, garden=True)
         else:
             command: str|list = ask_for_action(filters)
-        if command == "exit":
+        if command == "exit" and garden is False:
             return 0
+        elif command == "exit" and garden is True:
+            return plants_for_garden
         elif command == "mdata":
             data = reload_data()
         elif command == "adata":
@@ -82,8 +84,9 @@ def manipulate_database(data, garden=False) -> Literal[0]:
             else:
                 print(f"No plant with ID: {command[1]} exist") 
         elif command[0] == "add":
-            if garden := add_plant_to_garden(command[1]):
-                print(f"Plant with id {command[1]} was succesfully added to {garden} garden") 
+            plant_to_garden = add_plant_to_garden(command[1])
+            plants_for_garden.append(plant_to_garden)
+            print(f"Plant {plant_to_garden["name"]} succesfully added to garden")
         else:
             print("Invalid command")
             break
@@ -93,10 +96,12 @@ def ask_for_action(actual_filters:dict, garden=False):
     while True:
         try:
             user_command: str = input("Give command: ")
-            command = data_commands(user_command, actual_filters)
+            if garden is False:
+                command = data_commands(user_command, actual_filters)
+            elif garden is True:
+                command = data_commands(user_command, actual_filters, garden=True)
             if command == 1:
-                raise ValueError("Invalid command")
-            print(f"Command is {command}")
+               pass
             return command
         except ValueError as e:
             print(e)   
@@ -127,19 +132,14 @@ def edit_plant_info(edit_plant:dict) -> Literal['exit']:
             edit_plant = plant.edit_plant_info(edit_plant, command)
             new_plant = edit_plant
         
-def add_plant_to_garden(plant_id) -> str:
+def add_plant_to_garden(plant_id) -> dict:
     try:
         plants = PlantDataManager()
         plant_to_add = plants.search_plants(plant_id)
         if plant_to_add:
-            garden = active_garden()
-            if garden:
-                garden.add_plant(plant_to_add)
-            else:
-                raise ValueError("No active garden to add to")  
+            return plant_to_add   
         else:
             raise ValueError(f"No plant with ID {plant_id} was found")
-        return garden.name
     except (ValueError, Exception) as e:
         print(e)
         raise

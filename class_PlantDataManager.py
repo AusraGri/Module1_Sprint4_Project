@@ -38,17 +38,23 @@ class PlantDataManager:
             }
             if full is True:
                 print(tabulate([info], headers = "keys", tablefmt="grid", maxcolwidths=35))
+                info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
+                add_info = {
+                info : plant.additional_information
+            }
+                print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
+                print("=" * 20)
             else:
                 plants_to_show.append(info)
         if full is False:
             print(tabulate(plants_to_show, headers = "keys", tablefmt="grid", maxcolwidths=35))
-            if full is True:
-                info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
-                add_info = {
-                    info : plant.additional_information
-                }
-                print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
-                print("=" * 20)
+        # if full is True:
+        #     info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
+        #     add_info = {
+        #         info : plant.additional_information
+        #     }
+        #     print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
+        #     print("=" * 20)
     
     def filter_by_attribute_key(self, plant_attribute:str, key:str, data=None) -> list[dict]:
         if data is None:

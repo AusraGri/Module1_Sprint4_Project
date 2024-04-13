@@ -15,6 +15,7 @@ import time
 class DataHandler:
     def __init__(self, filename:str) -> None:
         self.filename: str = filename
+        self._delete_allowed: bool = False
     
     def store_data(self, data) -> None:
         file_path: str = os.path.join(os.getcwd(), self.filename)
@@ -62,10 +63,18 @@ class DataHandler:
             updated_data.append(item)
         with open(self.filename, 'w') as file:
             json.dump(updated_data, file, indent=4)
+            
+    @property
+    def delete_allowed(self) -> bool:
+        return self._delete_allowed
+
+    @delete_allowed.setter
+    def delete_allowed(self, value):
+        self._delete_allowed = value          
                 
-                
-        
-        
+    def delete_all(self):       
+        if os.path.exists(self.filename):
+            os.remove(self.filename)
         
      
     def text_editor(self, text) -> None:

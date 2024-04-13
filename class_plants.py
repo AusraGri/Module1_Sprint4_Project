@@ -51,7 +51,7 @@ class PlantInfo:
         light: str = PlantInfo.get_lighting()
         add_info: str = PlantInfo.get_additional_info()
         plant_info: dict = {
-            "Id": int(plant_id),
+            "Id": plant_id,
             "Name" : name,
             "Variety" : variety,
             "Scientific Name" : scient_name,

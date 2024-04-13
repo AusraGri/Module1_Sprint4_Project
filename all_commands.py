@@ -27,17 +27,17 @@ def data_commands(user_input, filt_values, garden=False):
     # Options for Filtering
 
     filt.add_argument("--filter", action="store_true", help="Enable filtering")
-    filt.add_argument("--type",metavar=("TYPE"), choices=types,help="Filter garden data by plant type")
-    filt.add_argument("--height",metavar=("VALUE"), help="Filter garden data by plant height (cm)",type=int,)
-    filt.add_argument("--name", metavar=("NAME"), help="Filter garden data by plant name", type=str)
-    filt.add_argument("--sowing",metavar=("SOW_MONTH"), choices=sowing, help="Filter garden data by plant sowing time")
-    filt.add_argument("--flower",metavar=("MONTH"), choices=flowering, help="Filter garden data by plant flowering time")
-    filt.add_argument("--color",metavar=("COLOR"), choices=colors, help="Filter garden data by plant color")
-    filt.add_argument("--light",metavar=("LIGHT"), choices=lighting, help="Filter garden data by plant lighting requerements")
+    filt.add_argument("--type",metavar=("TYPE"), choices=types,help="Filter plant data by plant type")
+    filt.add_argument("--height",metavar=("VALUE"), help="Filter plant data by plant height (cm)",type=int,)
+    filt.add_argument("--name", metavar=("NAME"), help="Filter plant data by plant name", type=str)
+    filt.add_argument("--sowing",metavar=("SOW_MONTH"), choices=sowing, help="Filter plant data by plant sowing time")
+    filt.add_argument("--flower",metavar=("MONTH"), choices=flowering, help="Filter plant data by plant flowering time")
+    filt.add_argument("--color",metavar=("COLOR"), choices=colors, help="Filter plant data by plant color")
+    filt.add_argument("--light",metavar=("LIGHT"), choices=lighting, help="Filter plant data by plant lighting requerements")
 
     # Options for sorting
     sort = parser.add_argument_group("Data Sorting")
-    sort.add_argument("--sort", choices=["type", "name", "height", "color"], help="Sort garden data by type, name, height, or color")
+    sort.add_argument("--sort", choices=["type", "name", "height", "color"], help="Sort plant data by type, name, height, or color")
 
     if garden is False:# Options for editing
         edit = parser.add_argument_group("Data Editing")
@@ -55,51 +55,52 @@ def data_commands(user_input, filt_values, garden=False):
         delete.add_argument("--delete", metavar="PLANT_ID", help="Delete a plant by ID", type=validate_id)
         
     if garden is True: #Options for adding to garden
-        add = parser.add_argument_group("Adding to Garden")
-        add.add_argument("--add", metavar="PLANT_ID", help="Add plant to garden by ID", type=validate_id)
+        adding = parser.add_argument_group("Adding to Garden")
+        adding.add_argument("--add", metavar="PLANT_ID", help="Add plant to garden by ID", type=validate_id)
         
 
     try:
         args: argparse.Namespace = parser.parse_args(command_line)
     except (SystemExit, Exception):
-        print("Try '--help' for more information.")
         return 1
 
-        # Check which option was provided and return the corresponding command
+
     if args.filter:
         if args.type:
-            return ["filter", "type", args.type[0]]
+            return ["filter", "type", args.type]
         elif args.height:
-            return ["filter", "height", args.height[0]]
+            return ["filter", "height", args.height]
         elif args.name:
-            return ["filter", "name", args.name[0]]
+            return ["filter", "name", args.name]
         elif args.sowing:
-            return ["filter", "sowing", args.sowing[0]]
+            return ["filter", "sowing", args.sowing]
         elif args.flower:
-            return ["filter", "flowering", args.flower[0]]
+            return ["filter", "flowering", args.flower]
         elif args.color:
-            return ["filter", "color", args.color[0]]
+            return ["filter", "color", args.color]
         elif args.light:
-            return ["filter", "light", args.light[0]]
+            return ["filter", "light", args.light]
     elif args.sort:
-        return ["sort", args.sort[0]]
+        return ["sort", args.sort]
     elif args.main:
         return "mdata"
     elif args.all:
         return "adata"
+    elif args.full:
+        return ["full", str(args.full)]
     elif args.exit:
         return "exit"
-    elif args.edit:
-        return ["edit", str(args.edit[0])]
-    elif args.delete:
-        return ["delete", str(args.delete[0])]
-    elif args.full:
-        return ["full", str(args.full[0])]
-    elif args.add:
-        return ["add", str(args.add[0])]
-    else:
-        print("Try '--help' for more information.")
-        raise ValueError("Invalid command")
+
+    if garden is False:
+        if args.edit:
+            return ["edit", str(args.edit[0])]
+        elif args.delete:
+            return ["delete", str(args.delete[0])]
+  
+    if garden is True:  
+        if args.add:
+            return ["add", str(args.add)]
+ 
 
 
 def editing_commands(user_input):
@@ -162,7 +163,7 @@ def validate_id(arg_value, pat=re.compile(r"(\d{5})$")):
 
 
 
-result = data_commands(user, filters, garden=True)
-print(result)
+# result = data_commands(user, filters, garden=True)
+# print(result)
 # result = editing_commands("--help")
 # print(result)

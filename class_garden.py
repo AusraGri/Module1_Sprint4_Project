@@ -11,6 +11,7 @@ class Garden:
             self.name: str = data
             self.date: str = datetime.now().strftime("%Y-%m-%d")
             self.garden: list = []
+            self.notes = None
         elif isinstance(data, dict):
             required_keys: set[str] = {"garden_id", "name", "date", "garden"}
             if required_keys.issubset(data.keys()):
@@ -19,6 +20,7 @@ class Garden:
                     self.name = data["name"]
                     self.date = data["date"]
                     self.garden = data["garden"]
+                    self.notes = data["notes"]
                 except KeyError as e:
                     print(f"Invalid dictionary key for: {e}")
             else:
@@ -33,6 +35,9 @@ class Garden:
     def add_plant(self, plant: dict) -> None:
         plant = Plant(plant)
         self.garden.append(plant.id)
+    
+    def add_notes(self, text:str) -> None:
+        self.notes: str = text
         
     def remove_plant(self, plant_id: str) -> None:
         for plant in self.garden:
@@ -41,8 +46,21 @@ class Garden:
                 print(f"{plant.name} was removed from the garden")
             else:
                 print("Plant not found in the garden.")
+    
+    def plant_names_in_garden(self):
+        garden_plant_names =""
+        for plant_id in self.garden:
+            data = PlantDataManager()
+            plant = data.search_plants(plant_id)
+            if plant:
+                plant = Plant(plant)
+                garden_plant_names += f"{plant.name} ({plant.variety}), "
+        garden_plant_names = garden_plant_names[:-2]
+        return garden_plant_names
+        
+        
             
-    def display_garden(self) -> None:
+    def display_garden_plants(self, display=True) -> None:
         print("Plants in the garden: ")
         garden_plants =[]
         for plant_id in self.garden:
@@ -50,16 +68,14 @@ class Garden:
             plant = data.search_plants(plant_id)
             if plant:
                 garden_plants.append(plant)
-        data.show_plants(garden_plants, full=True)
-        
-    def garden_information_dict(self):
-        garden = {
-            "garden id" : self.garden_id,
-            "garden name" : self.name,
-            "created" : self.date,
-            "garden plants" : self.garden,
-        }
-        return garden
+        if display is True:
+            data.show_plants(garden_plants)
+        return garden_plants
+    
+    
+    # def visual_garden(self):
+    #     pass
+          
             
 
 one = {
