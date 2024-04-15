@@ -1,11 +1,23 @@
-from re import A
 from class_PlantDataManager import PlantDataManager
-from class_plants import Plant
+from class_Plants import Plant
 from datetime import datetime
+from tabulate import tabulate
 
+"""Class to create/ store / edit information about the Garden
+    Returns:
+        object|dict : returns Garden object or Garden inforamtion as dictionary
+    """
 
 class Garden:
     def __init__(self, data:str|dict) -> None:
+        """Takes parameter and if it is a string initializzes new Garden object
+        If it is a given dictionary of converted Garden object to dictionary
+        takes parameters from dictionary
+
+        Args:
+            data (str | dict): string for new Garden object, 
+            dictionary for getting parameters from dictionary
+        """
         if isinstance(data, str):
             self.garden_id: str = datetime.now().strftime("%d%H%M%S")
             self.name: str = data
@@ -30,85 +42,106 @@ class Garden:
        
         
     def to_dict(self) -> dict:
+        """Converts object to dictionary
+
+        Returns:
+            dict: returns dictionary
+        """
         return self.__dict__
         
     def add_plant(self, plant: dict) -> None:
+        """adds plant id to the Garden
+        Args:
+            plant (dict): plant object as dictionary
+        """
         plant = Plant(plant)
         self.garden.append(plant.id)
     
     def add_notes(self, text:str) -> None:
+        """Adds additional information about Garden
+        Args:
+            text (str): text
+        """
         self.notes: str = text
         
     def remove_plant(self, plant_id: str) -> None:
-        for plant in self.garden:
-            if plant.id in self.garden:
-                self.garden.remove(plant)
-                print(f"{plant.name} was removed from the garden")
-            else:
-                print("Plant not found in the garden.")
+        """Removes plant id from Garden plants list
+        Args:
+            plant_id (str): Plant id to remove
+        Returns:
+            list: returns updated garden list of plants
+        """
+        if plant_id in self.garden:
+            self.garden.remove(plant_id)
+            print("Plant was removed from the garden")
+        else:
+            print("Plant not found in the garden.")
+        return self.garden
     
-    def plant_names_in_garden(self):
-        garden_plant_names =""
+    def plant_names_in_garden(self) -> str:
+        """Retrieves plant names that are in the Garden list
+        Returns:
+            str: plant name and variety in a single string
+        """
+        garden_plant_names: str =""
         for plant_id in self.garden:
             data = PlantDataManager()
-            plant = data.search_plants(plant_id)
+            plant: dict = data.search_plants(plant_id)
             if plant:
                 plant = Plant(plant)
                 garden_plant_names += f"{plant.name} ({plant.variety}), "
+            if not plant:
+                del plant_id
         garden_plant_names = garden_plant_names[:-2]
         return garden_plant_names
-        
-        
             
-    def display_garden_plants(self, display=True) -> None:
-        print("Plants in the garden: ")
-        garden_plants =[]
+    def display_garden_plants(self, display=True) -> list[dict]:
+        """Retrieve or print all plants that are in the Garden with full information
+        Args:
+            display (bool, optional): To enable(True)/disable(False) printing. 
+            Defaults to True.
+        Returns:
+            list[dict]: returns information as list of plant dictionaries
+        """
+        if display is True:
+            print("Plants in the garden: ")
+        garden_plants: list =[]
         for plant_id in self.garden:
             data = PlantDataManager()
-            plant = data.search_plants(plant_id)
+            plant: dict = data.search_plants(plant_id)
             if plant:
                 garden_plants.append(plant)
+            if not plant:
+                del plant_id
         if display is True:
             data.show_plants(garden_plants)
         return garden_plants
     
-    
-    # def visual_garden(self):
-    #     pass
-          
-            
-
-one = {
-        "id": "00044",
-        "name": "Marigold",
-        "variety": "Geisha Girl",
-        "scientific_name": "Calendula officinalis L",
-        "type": "Annual",
-        "height": 50,
-        "sowing": "May, June",
-        "flowering": "July, August, September",
-        "color": "Orange",
-        "light": "Full Sun",
-        "additional_information": "Grown in groups with other annual flowers, in beds, balconies, pots. The flowers can be picked, the dried flowers are used for medicinal teas. Marigolds can be sown between vegetables and flowers. Their neighborhood can protect nearby plants from diseases and pests. It grows best in a sunny place, in fertile soil. It blooms all summer."
-    }
-
-two = {
-        "id": "00043",
-        "name": "Zinnia",
-        "variety": "Envy",
-        "scientific_name": "Zinnia elegans dahlienflora",
-        "type": "Annual",
-        "height": 90,
-        "sowing": "May, June",
-        "flowering": "June, July, August, September",
-        "color": "Green, Yellow",
-        "light": "Full Sun",
-        "additional_information": "Annual, 90 cm high, fast-growing flowers. Planted in flower gardens, picked for bouquets. The flowers are large, 8-10 cm in diameter, semi-full. It grows and blooms well in a sunny, warm place, in light soil. Seedlings are planted in flower beds after the end of frost. Watering is not necessary, but the inflorescences of irrigated plants are larger and bloom longer. Inflorescences that have bloomed are cut off so that new ones can form faster."
-    }
-info = {"garden_id": "11105525", "name": "new", "date": "2024-04-11", "garden": ["something"]}
-# gard = Garden(info)
-# print(gard.name, gard.garden)
-# garden.add_plant(one)
-# garden.add_plant(two)
-# garden.display_garden()
-
+    def full_info(self, plants=True, visual=True) -> dict[str, str] | None:
+        """Prints out or returns information about the Garden
+        Args:
+            plants (bool, optional): To exclude plants names and variety set to False. 
+            Defaults to True.
+            visual (bool, optional): To disable printing set to False. 
+            Defaults to True.
+        Returns:
+            dict[str, str] | None: returns informations about Garden as dictionary 
+            or prints it out
+        """
+        info: dict[str, str] = {
+                "Garden ID": self.garden_id,
+                "Garden Name" : self.name,
+                "Created" : self.date,
+                "Garden Description" : self.notes,
+            }
+        if visual is True:
+            print(tabulate([info], headers = "keys", tablefmt="grid", maxcolwidths=100))
+        if plants is True and visual is True:
+            self.display_garden_plants()
+        if plants is True and visual is False:
+            plants: list[dict] = self.display_garden_plants(display=False)
+            info.update({"Garden Plants" : f"{plants["name"]} ({plants["variety"]})"})
+            return info
+        if plants is False and visual is False:
+            return info
+  

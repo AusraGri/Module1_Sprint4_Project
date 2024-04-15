@@ -1,11 +1,19 @@
 from typing import Literal
-from class_data_handler import DataHandler
+from class_DataHandler import DataHandler
 from command_tables import tabulate
-from class_plants import Plant, PlantInfo
+from class_Plants import Plant, PlantInfo
 
+"""For working with plant database: soting/ filterins / editing data in plant database
+"""
 
 class PlantDataManager:
-    def __init__(self, data:list[dict]=None) -> None:
+    def __init__(self, data: list[dict] = None) -> None:
+        """Takes a list of dictionaries of plant data
+        Args:
+            data (list[dict], optional): Plant data stored as a list of dictionaries
+            If no data given, retrieves data from default plant data file
+            Defaults to None.
+        """
         if data is None:
             self.file = DataHandler("plants.json")
             self.data = self.file.load_data()
@@ -13,61 +21,85 @@ class PlantDataManager:
             self.file = DataHandler("plants.json")
             self.data: list[dict] = data
 
-    def show_plants(self, data:list[dict]=None, full=False) -> None:
+    def show_plants(self, data: list[dict] = None, full=False, printed=True) -> None | list[dict]:
+        """Prints out or returns data in the given plant data
+        Args:
+            data (list[dict], optional): if no data given, 
+            data will be retrieved from default plant data file. 
+            Defaults to None.
+            full (bool, optional): To include additional information from plant data, set to True. 
+            Defaults to False.
+            printed (bool, optional): To disable printing data, set to False. 
+            Defaults to True.
+
+        Returns:
+            list[dict]: returns plant data as list of dictionaries
+        """
         if data is None:
             data = self.data
         if len(data) == 0:
             print("No data to show")
             return
         number = 0
-        plants_to_show = []
+        plants_to_show: list = []
         for item in data:
             number += 1
             plant = Plant(item)
-            info = {
-                "No.:" : number,
-                "Plant ID" : plant.id,
-                "Name, Variety" : f"{plant.name}, {plant.variety}",
-                "Scientific Name" : plant.scientific_name,
-                "Type" : plant.type,
-                "Height (cm)" : plant.height,
-                "Sowing" : plant.sowing,
-                "Flowering" : plant.flowering,
-                "Color" : plant.color,
-                "Light" : plant.light, 
+            info: dict[str, str | int] = {
+                "No.:": number,
+                "Plant ID": plant.id,
+                "Name, Variety": f"{plant.name}, {plant.variety}",
+                "Scientific Name": plant.scientific_name,
+                "Type": plant.type,
+                "Height (cm)": plant.height,
+                "Sowing": plant.sowing,
+                "Flowering": plant.flowering,
+                "Color": plant.color,
+                "Light": plant.light,
             }
             if full is True:
-                print(tabulate([info], headers = "keys", tablefmt="grid", maxcolwidths=35))
-                info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
-                add_info = {
-                info : plant.additional_information
-            }
-                print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
-                print("=" * 20)
+                if printed is True:
+                    print(tabulate([info], headers="keys", tablefmt="grid", maxcolwidths=35))
+                infor: str = (
+                    f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
+                )
+                add_info: dict[str] = {infor: plant.additional_information}
+                if printed is True:
+                    print(tabulate([add_info],headers="keys",tablefmt="grid",maxcolwidths=170,))
+                    print("=" * 20)
+                if printed is False:
+                    info["Additional Information"] = plant.additional_information
+                plants_to_show.append(info)
             else:
                 plants_to_show.append(info)
-        if full is False:
-            print(tabulate(plants_to_show, headers = "keys", tablefmt="grid", maxcolwidths=35))
-        # if full is True:
-        #     info: str = f"Additional information for ID:{plant.id}: {plant.name}, {plant.variety} "
-        #     add_info = {
-        #         info : plant.additional_information
-        #     }
-        #     print(tabulate([add_info], headers = "keys", tablefmt="grid", maxcolwidths=170)) 
-        #     print("=" * 20)
-    
-    def filter_by_attribute_key(self, plant_attribute:str, key:str, data=None) -> list[dict]:
+        if full is False and printed is True:
+            print(tabulate(plants_to_show, headers="keys", tablefmt="grid", maxcolwidths=35))
+        else:
+            return plants_to_show
+
+    def filter_by_attribute_key(self, plant_attribute: str, key: str, data=None) -> list[dict]:
+        """Filted given plant database by plant atrribute and feature
+        Args:
+            plant_attribute (str): Plant atrribute saved as dictioanry keys
+            key (str): Saved plant features in attribute key
+            data (list[dict], optional): Plant data to filter. 
+            If None, takes all data from default plant data file.
+            Defaults to None.
+
+        Returns:
+            list[dict]: returns filtered data by given plant attribute and feature
+        """
         if data is None:
-            data = self.data
-        filtered_data: list[dict] =[]
+            data: list[dict] = self.data
+        filtered_data: list[dict] = []
         if plant_attribute.split(" "):
-            plant_attribute:str = plant_attribute.replace(" ", "_")
+            plant_attribute: str = plant_attribute.replace(" ", "_")
         for item in data:
             plant = Plant(item)
             if isinstance(key, int):
                 mini: int = key - 10
                 maxi: int = key + 10
-                if  maxi >= getattr(plant, plant_attribute.lower(), None) >= mini:
+                if maxi >= getattr(plant, plant_attribute.lower(), None) >= mini:
                     filtered_data.append(item)
             else:
                 if key in getattr(plant, plant_attribute.lower(), None).lower():
@@ -76,19 +108,38 @@ class PlantDataManager:
             print(f"No data was found by {plant_attribute} and {key}")
         else:
             return filtered_data
-    
-    def sort_by_key(self, key, data=None) -> list[dict]:
+
+    def sort_by_key(self, key:str, data=None) -> list[dict]:
+        """Sorts plant data by given plant attribute, saved as plant dictionary key
+        Args:
+            key (str): Key from plant information dictionary keys
+            data (list[dict], optional): Plant data to sort. 
+            If None, takes all data from default plant data file.
+            Defaults to None.
+        Returns:
+            list[dict]: returns sorted data
+        """
         if data is None:
             data: list[dict] = self.data
         sorted_data: list[dict] = sorted(data, key=lambda x: x[f"{key.lower()}"])
         return sorted_data
-    
-    def existing_data_attributes(self, key:str, data=None) -> str|None:
+
+    def existing_data_attributes(self, key: str, data=None) -> str| None:
+        """Reads given plant data and collects possible features saved in plant key attributes
+        Args:
+            key (str): Plant attribute saved as key in plant data dictionary
+            data (list[dict], optional): Plant data to work with. 
+            If None, takes all data from default plant data file. 
+            Defaults to None.
+        Returns:
+            list | None: If there are features in key, returns a list of features, 
+            else returns None
+        """
         if data is None:
-            data = self.data
-        actual_filters:list = []
+            data: list[dict] = self.data
+        actual_filters: list = []
         if key.split(" "):
-                key:str = key.replace(" ", "_")
+            key: str = key.replace(" ", "_")
         for item in data:
             plant = Plant(item)
             attr = getattr(plant, key.lower(), None)
@@ -101,34 +152,49 @@ class PlantDataManager:
                 actual_filters.append(str(attr).lower())
         filters = set(actual_filters)
         if filters:
-            unique_attr = PlantDataManager.set_to_string(filters)
+            unique_attr: str = PlantDataManager.set_to_string(filters)
             return unique_attr
         else:
             return None
-        
+
     def get_actual_filters(self, data=None) -> dict[str, str]:
+        """Collects all actual plant attributes and features from plant database
+        Args:
+            data (list[dict], optional): Plant data to work with. 
+            If None, takes all data from default plant data file. 
+            Defaults to None.
+        Returns:
+            dict[str, str]: Returns dictionary of plant attributes as keys
+            and features as values
+        """
         if data is None:
-            data:list[dict]  = self.data
+            data: list[dict] = self.data
         types: str = self.existing_data_attributes("type", data)
         height: str = self.existing_data_attributes("height", data)
         sowing: str = self.existing_data_attributes("sowing", data)
-        flower:str = self.existing_data_attributes("flowering", data)
-        color:str = self.existing_data_attributes("color", data)
-        light:str = self.existing_data_attributes("light", data)
-        
-        filters:dict[str,str] = {
-            "name" : "type plant name",
-            "type" : types,
-            "height" : height,
-            "sowing" : sowing,
+        flower: str = self.existing_data_attributes("flowering", data)
+        color: str = self.existing_data_attributes("color", data)
+        light: str = self.existing_data_attributes("light", data)
+
+        filters: dict[str, str] = {
+            "name": "type plant name",
+            "type": types,
+            "height": height,
+            "sowing": sowing,
             "flowering": flower,
-            "color" : color,
+            "color": color,
             "light": light,
-        }    
-        return filters          
-            
-    
-    def edit_plant_info(self, plant:dict,  key:str) -> dict:
+        }
+        return filters
+
+    def edit_plant_info(self, plant: dict, key: str) -> dict:
+        """Edits plant information by given attribute key
+        Args:
+            plant (dict): plant information saved as dictionary
+            key (str): plant attrinbute saved as dictionary key
+        Returns:
+            dict: returns edited plant information saved as dictionary
+        """
         updated_plant = Plant(plant)
         key = key.lower()
         if key == "type":
@@ -170,62 +236,118 @@ class PlantDataManager:
         elif key == "additional information":
             self.file.text_editor(updated_plant.additional_information)
             if PlantDataManager.editing_text():
-                new_add_info:str = self.file.read_text()
+                new_add_info: str = self.file.read_text()
                 updated_plant.additional_information = new_add_info
                 return updated_plant.to_dict()
-                
-                    
 
-        
-    
-    def delete_plant(self, plant_id) -> None | bool: 
-        plant = self.search_plants(plant_id)
+    def delete_plant(self, plant_id: str) -> bool:
+        """Deletes plant from plant databse by plant ID
+        Args:
+            plant_id (str): plant ID of plant to delete
+        Returns:
+            bool: If deletion is succesful return True.
+            If deletion in not done, returns False
+        """
+        plant: dict = self.search_plants(plant_id)
         if not plant:
             print(f"Plant with id {plant_id} does not exist")
             return False
+        PlantDataManager.search_plant_in_gardens(plant_id)
         self.show_plants([plant], full=True)
         if PlantDataManager.ask_for_action("Do you want to delete this plant?"):
-            if PlantDataManager.ask_for_action("Confirm: DELETE the plant permanently?"):
-                print(f"Plant with id {plant_id} was deleted")
+            if PlantDataManager.ask_for_action(
+                "Confirm: DELETE the plant permanently?"
+            ):
                 self.file.remove_entry(plant)
+                print(f"Plant with id {plant_id} was deleted")
                 return True
         else:
             print("No changes were made")
             return False
-        
-                    
-    def search_plants(self, plant_id, data=None) -> dict :
+
+    def search_plants(self, plant_id: str, data=None) -> dict:
+        """Searches for plant in plant database by plant ID
+        Args:
+            plant_id (str): ID of plant to search
+            data (list[dict], optional): Plant data to work with. 
+            If None, takes all data from default plant data file.
+            Defaults to None.
+        Returns:
+            dict: return found plant information as dictionary
+        """
         if data is None:
-            data = self.data
+            data: list[dict] = self.data
         sorted_id: list[dict] = self.sort_by_key("id")
         result: dict = PlantDataManager.binary_search(sorted_id, plant_id)
         if result:
-            return result     
-                
-    @staticmethod       
-    def set_to_string(set_list):
+            return result
+
+    @staticmethod
+    def search_plant_in_gardens(plant_id:str) -> None:
+        """Searches if plant is a part of any Garden before deleting plant
+        If plant is found in any Garden, informs about it
+        Args:
+            plant_id (str): plant id to search for
+        """
+        garden_file = DataHandler("gardens.json")
+        gardens: list[dict] = garden_file.load_data()
+        plant_in_gardens: str = ""
+        for garden in gardens:
+            if plant_id in garden["garden"]:
+                plant_in_gardens += garden["name"] + ", "
+        if plant_in_gardens:
+            print(
+                f"ATTENTION: This plant is included in gardens: {plant_in_gardens[:-2]}"
+            )
+            print(
+                "If You will delete this plant from database it will be also deleted from Gardens"
+            )
+
+    @staticmethod
+    def set_to_string(set_list: set) -> str:
+        """Used to convert a set to string. 
+        Args:
+            set_list (set): set to convert
+
+        Returns:
+            str: returns items in set as in a single string, 
+            separated by commas
+        """
         if all(isinstance(x, (int, float)) for x in set_list):
             string: list = [min(set_list), max(set_list)]
-            return string   
+            return string
         string = []
-        sorted_list = sorted(set_list)
+        sorted_list: list = sorted(set_list)
         for item in sorted_list:
             string.append(item)
         return string
-    
+
     @staticmethod
     def editing_text() -> Literal[True]:
-        print("""
+        """When edititng text in text editor, prompts user
+        to confirm when editing is finished and text file is saved
+        """
+        print(
+            """
             Make changes to additional information and SAVE the file. 
             Did you make any changes in the editor?    
-        """)
+        """
+        )
         while True:
-            ask = input("Press Enter to continue... ")
+            ask: str = input("Press Enter to continue... ")
             if ask == "":
                 return True
-          
-    @staticmethod       
-    def ask_for_action(action:str) -> bool:
+
+    @staticmethod
+    def ask_for_action(action: str) -> bool:
+        """To get a YES or NO answer for given question to user
+        Args:
+            action (str): Question to ask for
+
+        Returns:
+            bool: if answer is YES, returns Tue, 
+            if NO, return False
+        """
         while True:
             ask: str = input(f"{action} (Y/N): ").lower()
             if ask == "y":
@@ -233,15 +355,24 @@ class PlantDataManager:
             elif ask == "n":
                 return False
             else:
-                print("Wrong input: 'Y' for 'YES' and 'N' for 'NO'")        
-                
-    @staticmethod           
-    def binary_search(data:list, id:str,):
-        x = int(id)
+                print("Wrong input: 'Y' for 'YES' and 'N' for 'NO'")
+
+    @staticmethod
+    def binary_search(data: list, plant_id: str,) -> dict | None:
+        """Searching algorithm fro finding plant 
+        in plant databse by pland ID
+        Args:
+            data (list): Sorted plant data by plant ID to work with. 
+            plant_id (str): plant Id to search for
+        Returns:
+            dict | None: returns dictionary of plant data if found
+            Returns none if plant is not found
+        """
+        x = int(plant_id)
         low = 0
         high: int = len(data) - 1
         while low <= high:
-            mid: int = low + (high - low)//2
+            mid: int = low + (high - low) // 2
             if int(data[mid]["id"]) == x:
                 return data[mid]
             elif int(data[mid]["id"]) < x:
@@ -249,30 +380,3 @@ class PlantDataManager:
             else:
                 high = mid - 1
         return None
-                
-                
-        
-    
-                        
-# p_data = {'id': '00044', 'name': 'Marigold', 'variety': 'Geisha Girl', 'scientific_name': 'Calendula officinalis L', 'type': 'Annual', 'height': 50, 'sowing': 'May, June', 'flowering': 'July, August, September', 'color': 'Orange', 'light': 'Full Sun', 'additional_information': 'Grown in groups with other annual flowers, in beds, balconies, pots. The flowers can be picked, the dried flowers are used for medicinal teas. Marigolds can be sown between vegetables and flowers. Their neighborhood can protect nearby plants from diseases and pests. It grows best in a sunny place, in fertile soil. It blooms all summer.'}
-# plant = PlantDataManager([p_data])   
-# filt: dict[str, str] = plant.get_actual_filters()
-# print(filt)
-# plant.show_plants(full=True)
-# new_plant = plant.edit_plant_info(p_data, "additional information")
-# print(new_plant)
-# plant.show_plants([new_plant], full=True)
-        
-# v = PlantDataManager()
-# v.show_plants(full=True)
-# atrr: str = v.existing_data_attributes("height")
-# attr2: dict[str, str] = v.get_actual_filters()
-# print(atrr)
-# v.show_plants()
-# plant = v.search_plants("044")
-# v.edit_plant_info(plant, "additional information")
-
-
-
-
-    

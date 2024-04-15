@@ -1,27 +1,34 @@
+from typing import LiteralString
 from class_PlantDataManager import PlantDataManager
-from class_plants import Plant
+from class_Plants import Plant
 from tabulate import tabulate
 from colorist import BgColorRGB
 
-# garden = {"garden_id": "11105525", "name": "Testing Garden", "date": "2024-04-11", "garden": ["00044","00043"]}
-def garden_visual(plants_visual:list[dict]):
+"""Visualisation of garden information about plants height, blooming, sowing time, main colors in garden
+    """
+def garden_visual(plants_visual:list[dict]) -> None:
+    """Prints out table of garden plants visualizig plant color, 
+    flowering time, sowing time, height
+    Args:
+        plants_visual (list[dict]): plants to add in table
+    """
     all_months = set()
     for plant in plants_visual:
-        sowing_months = plant["sowing"].split(", ")
+        sowing_months:list[str] = plant["sowing"].split(", ")
         all_months.update(sowing_months)
-        flowering_months = plant["flowering"].split(", ")
+        flowering_months:list[str] = plant["flowering"].split(", ")
         all_months.update(flowering_months)
 
-    month_names = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    month_table = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    table_header = ["Name", "Color", "Height", "cm"] + month_table
-    table = []
+    month_names: list[str] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    month_table: list[str] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    table_header: list[str] = ["Name", "Color", "Height", "cm"] + month_table
+    table:list = []
     flow = BgColorRGB(255, 204, 209)
     sow = BgColorRGB(204, 255, 204)
     seedling =  "☑"
     blossom = "✿"
     for plant in plants_visual:
-        row = [f"{plant["name"]} ({plant["variety"]})", colorize(plant["color"]), height_representation(plant["height"]), plant["height"]]
+        row:list = [f"{plant["name"]} ({plant["variety"]})", colorize(plant["color"]), height_representation(plant["height"]), plant["height"]]
         flowering_months = set(plant["flowering"].split(", "))
         sowing_months = set(plant["sowing"].split(", "))
         for month in month_names:
@@ -34,17 +41,24 @@ def garden_visual(plants_visual:list[dict]):
             else:
                 row.append("")
         table.append(row)
-
     print(tabulate(table, headers=table_header, tablefmt="grid"))
+   
 
-def garden_plants_for_visual(garden):
+def garden_plants_for_visual(garden: dict) -> list[dict]:
+    """Retrieves plants data that are in the garden as needed 
+    for the visual table to be created
+    Args:
+        garden (dict): garden information
+    Returns:
+        list[dict]: plants in the garden with properly formatted information
+    """
     plants = PlantDataManager()
-    garden_plants = []
+    garden_plants:list[dict] = []
     for item in garden["garden"]:
-        plant = plants.search_plants(item)
+        plant:dict = plants.search_plants(item)
         if plant:
             garden_plant = Plant(plant)
-            visual_info = {
+            visual_info:dict[str, str] = {
                 "Name": f"{garden_plant.name} ({garden_plant.variety})",
                 "Sowing" : garden_plant.sowing,
                 "Flowers": garden_plant.flowering,
@@ -54,9 +68,16 @@ def garden_plants_for_visual(garden):
             garden_plants.append(visual_info)
     return garden_plants
 
-def colorize(colors):
-    colors = colors.split(", ")
-    plant_color = ""
+def colorize(colors:str) -> str:
+    """Plant color data is converted to 
+    a color box
+    Args:
+        colors (str): colors from plant data
+    Returns:
+        str: colored background (box)
+    """
+    colors:list[str] = colors.split(", ")
+    plant_color:str = ""
     white = BgColorRGB(255, 255, 255)
     orange = BgColorRGB(255, 165, 0)
     blue = BgColorRGB(0, 0, 255)
@@ -64,7 +85,7 @@ def colorize(colors):
     yellow = BgColorRGB(255, 255, 0)
     purple = BgColorRGB(255, 0, 255)
     green = BgColorRGB(0, 153, 0)
-    color_match = {
+    color_match: dict[str, str] = {
         "Orange": get_color(orange),
         "Red" : get_color(red),
         "White": get_color(white),
@@ -79,19 +100,24 @@ def colorize(colors):
                 plant_color += value
     return plant_color
 
-def get_color(color):
-    colorized = f"{color}   {color.OFF}"
+def get_color(color) -> str:
+    """Applies given color to background
+    Args:
+        color (BgColorRGB): color from colorist
+    Returns:
+        str: formatted color "box"
+    """
+    colorized: str = f"{color}   {color.OFF}"
     return colorized
-        
 
-# plants = [
-#     {'Name': 'Marigold (Geisha Girl)', 'Sowing': 'May, June', 'Flowers': 'July, August, September', 'Color': 'Orange', 'Height': 50},
-#     {'Name': 'Zinnia (Envy)', 'Sowing': 'May, June', 'Flowers': 'June, July, August, September', 'Color': 'Green, Yellow', 'Height': 90}
-# ]
-
-
-
-def height_representation(height):
-    height_ = height // 10
-    column = f"{"|" * height_}"
+def height_representation(height:int) -> LiteralString:
+    """Converts plant hight to visual bars
+    divides height by 10 and multiplies |
+    Args:
+        height (int): height of plant
+    Returns:
+        LiteralString: bars of height
+    """
+    height_: int = height // 10
+    column: LiteralString = f"{"|" * height_}"
     return column

@@ -1,0 +1,67 @@
+[
+    {
+        "id": "00001",
+        "name": "Poppy",
+        "variety": "Pandora",
+        "scientific_name": "Papaver Rhoeas L",
+        "type": "Annual",
+        "height": 30,
+        "sowing": "April, May",
+        "flowering": "June, July",
+        "color": "Red",
+        "light": "Full-Sun",
+        "additional_information": "Annual, unique flowers of a new variety with semi-full pink cherry blossoms. It looks unique in summer flower beds, grows to a height of 60-90 cm. Easy to grow, blooms profusely. It does not need special soil conditions, it grows well in poor soil, in sunny and semi-shaded areas. Grown in beds, in groups with other flowers, sown in the lawn. Goes well with cornflowers and daisies. The flowers are picked in the bud phase, the cuttings are used for dry flower arrangements."
+    },
+    {
+        "id": "00002",
+        "name": "Maiden Pink",
+        "variety": "Flashing Light",
+        "scientific_name": "Dianthus deltoides L",
+        "type": "Perennial",
+        "height": 15,
+        "sowing": "April, May",
+        "flowering": "July, August, September",
+        "color": "Red",
+        "light": "Full-Sun, Part-Shade",
+        "additional_information": "Perennial, easy to grow, 15 cm high carpet flowers. It can grow in one place for many years. They are grown together with dwarf flowers, in rock gardens, for planting at the edges of graves and flower gardens. The flowers have a pleasant smell, after sowing in the spring they bloom in the fall of the same year, they bloom long and abundantly. Grows well in a sunny location, in well-drained and air-permeable soil. Uncovered in winter."
+    },
+    {
+        "id": "00003",
+        "name": "Zinnia",
+        "variety": "Envy",
+        "scientific_name": "Zinnia elegans dahlienflora",
+        "type": "Annual",
+        "height": 90,
+        "sowing": "May, June",
+        "flowering": "June, July, August, September",
+        "color": "Green, Yellow",
+        "light": "Full-Sun",
+        "additional_information": "Annual, 90 cm high, fast-growing flowers. Planted in flower gardens, picked for bouquets. The flowers are large, 8-10 cm in diameter, semi-full. It grows and blooms well in a sunny, warm place, in light soil. Seedlings are planted in flower beds after the end of frost. Watering is not necessary, but the inflorescences of irrigated plants are larger and bloom longer. Inflorescences that have bloomed are cut off so that new ones can form faster."
+    },
+    {
+        "id": "00004",
+        "name": "Marigold",
+        "variety": "Geisha Girl",
+        "scientific_name": "Calendula officinalis L",
+        "type": "Annual",
+        "height": 50,
+        "sowing": "May, June",
+        "flowering": "July, August, September",
+        "color": "Orange",
+        "light": "Full-Sun",
+        "additional_information": "Grown in groups with other annual flowers, in beds, balconies, pots. The flowers can be picked, the dried flowers are used for medicinal teas. Marigolds can be sown between vegetables and flowers. Their neighborhood can protect nearby plants from diseases and pests. It grows best in a sunny place, in fertile soil. It blooms all summer."
+    },
+    {
+        "id": "00006",
+        "name": "Roses",
+        "variety": "rrosete",
+        "scientific_name": "romarineta",
+        "type": "Perennial",
+        "height": 45,
+        "sowing": "April, May, June",
+        "flowering": "June, July, August, September",
+        "color": "White, Blue",
+        "light": "Part-Sun",
+        "additional_information": ""
+    }
+]

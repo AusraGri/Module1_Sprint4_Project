@@ -1,3 +1,7 @@
+"""Quite useless helpers now. But I wanted to colorize all MENU options and
+    Error / Program messages / User input for the nicer look and more convient interactions, but...
+    Lacking of time....
+    """
 class Sep:
     def __init__(self) -> None:
         pass
@@ -8,18 +12,12 @@ class Sep:
     def dots (self, number) -> None:
         print(f"{"." * number}")
     
-    def bold (self, number):
+    def bold (self, number) -> None:
         print(f"{"=" * number}")
     
-    def wall (self, number):
+    def wall (self, number) -> None:
         print(f"{"|" * number}")
 
         
-        
-        
-        
-# p = Sep()
-# p.line(20)
-# p.dots(20)
-# p.bold(20)
-# p.wall(20)
+def colorizer(text) -> None:
+    pass
