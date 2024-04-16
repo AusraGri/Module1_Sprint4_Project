@@ -1,7 +1,7 @@
 from class_plants import PlantInfo
 from class_DataHandler import DataHandler
 from helpers import Sep
-from class_Garden import Garden
+from class_garden import Garden
 
 """This program is for creation of new plants for databse
 """  
