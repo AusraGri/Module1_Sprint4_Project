@@ -3,7 +3,7 @@ from class_DataHandler import DataHandler
 from class_PlantDataManager import PlantDataManager
 import copy
 from all_commands import data_commands, editing_commands
-from class_Garden import Garden
+from class_garden import Garden
 from class_DataToPDF import DataToPDF
 
 """Manages over actions with plant database
