@@ -1,6 +1,6 @@
 import sys
 from typing import Literal
-from class_Garden import Garden
+from class_garden import Garden
 from plant_database import plant_data
 from add_plant import add_new_plant
 from garden_database import garden_menu
