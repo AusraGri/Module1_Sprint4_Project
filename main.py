@@ -63,7 +63,7 @@ def plant_database() -> None:
         program_menu()
     
     
-def exit_program() -> sys.NoReturn:
+def exit_program() -> None:
     """Exit the program"""
     print("Thank you for using this program")
     sys.exit()

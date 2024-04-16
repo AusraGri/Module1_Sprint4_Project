@@ -25,7 +25,7 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     filt: argparse._ArgumentGroup = parser.add_argument_group("Data Filtering")
     
     # Options for Filtering
-    filt.add_argument("--filter", action="store_true", help="Enable filtering")
+    # filt.add_argument("--filter", action="store_true", help="Enable filtering")
     filt.add_argument("--type",metavar=("TYPE"), choices=types,help="Filter plant data by plant type")
     filt.add_argument("--height",metavar=("VALUE"), help="Filter plant data by plant height (cm)",type=int,)
     filt.add_argument("--name", metavar=("NAME"), help="Filter plant data by plant name", type=str)
@@ -65,33 +65,33 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     except (SystemExit, Exception):
         return 1
 
-    if args.filter:
-        if args.type:
-            return ["filter", "type", args.type]
-        elif args.height:
-            return ["filter", "height", args.height]
-        elif args.name:
-            return ["filter", "name", args.name]
-        elif args.sowing:
-            return ["filter", "sowing", args.sowing]
-        elif args.flower:
-            return ["filter", "flowering", args.flower]
-        elif args.color:
-            return ["filter", "color", args.color]
-        elif args.light:
-            return ["filter", "light", args.light]
+
+    if args.type:
+        return ["filter", "type", args.type]
+    elif args.height:
+        return ["filter", "height", args.height]
+    elif args.name:
+        return ["filter", "name", args.name]
+    elif args.sowing:
+        return ["filter", "sowing", args.sowing]
+    elif args.flower:
+        return ["filter", "flowering", args.flower]
+    elif args.color:
+        return ["filter", "color", args.color]
+    elif args.light:
+        return ["filter", "light", args.light]
     elif args.sort:
         return ["sort", args.sort]
     elif args.main:
-        return "mdata"
+        return ["mdata"]
     elif args.all:
-        return "adata"
+        return ["adata"]
     elif args.full:
         return ["full", str(args.full)]
     elif args.exit:
-        return "exit"
+        return ["exit"]
     elif args.export:
-        return "export"
+        return ["export"]
 
     if garden is False:
         if args.edit:
@@ -148,7 +148,7 @@ def editing_commands(user_input: str) -> str|list[str]:
     elif args.sowing:
         return "sowing"
     elif args.flower:
-        return "flower"
+        return "flowering"
     elif args.color:
         return "color"
     elif args.light:
@@ -202,22 +202,22 @@ def all_garden_commands(commands: str, open_garden=False) -> str|list[str]:
         elif args.search:
             return ["search", args.search]
         elif args.exit:
-            return "exit"
+            return ["exit"]
     elif open_garden is True:
         if args.edit:
             return ["edit", args.edit]
         elif args.remove:
             return ["remove", args.remove]
         elif args.visual:
-            return "visual"
+            return ["visual"]
         elif args.delete:
-            return "delete"
+            return ["delete"]
         elif args.add:
-            return "add"
+            return ["add"]
         elif args.back:
-            return "back"
+            return ["back"]
         elif args.export:
-            return"export"
+            return ["export"]
         
     
 

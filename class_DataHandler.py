@@ -69,15 +69,12 @@ class DataHandler:
             data: list[dict] = json.load(file)
         updated_data: list = []
         for item in data:
-            if "id" in entry and item.get("id") == entry.get("id"):
-                item.update(entry)
-                break
-            elif "garden_id" in entry and item.get("garden_id") == entry.get(
-                "garden_id"
-            ):
-                item.update(entry)
-                break
-            updated_data.append(item)
+            if "id" in entry and "id" in item and item["id"] == entry["id"]:
+                updated_data.append(entry)
+            elif "garden_id" in entry and "garden_id" in item and item["garden_id"] == entry["garden_id"]:
+                updated_data.append(entry)
+            else:
+                updated_data.append(item)
         with open(self.filename, "w") as file:
             json.dump(updated_data, file, indent=4)
 

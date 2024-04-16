@@ -6,3 +6,5 @@ command_tables.py
 display_plant_set.py
 plants copy.json
 *.pyc
+/.pytest_cache
+
