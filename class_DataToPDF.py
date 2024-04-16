@@ -7,7 +7,6 @@ from reportlab.platypus import Paragraph
 """ Exports list of dictionaries to a PDF file using reportlab library. 
     Used to export Plant data and Garden data.
 """
-
 class DataToPDF:
     def __init__(self, *args: list[dict], filename:str) -> None:
         """takes list of dictionary and exports it as table in pdf file
