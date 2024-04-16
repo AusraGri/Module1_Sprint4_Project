@@ -3,7 +3,7 @@ from class_DataHandler import DataHandler
 from class_PlantDataManager import PlantDataManager
 import copy
 from all_commands import data_commands, editing_commands
-from class_Garden import Garden
+from class_garden import Garden
 from class_DataToPDF import DataToPDF
 
 """Manages over actions with plant database
@@ -41,7 +41,7 @@ def reload_data() -> list[dict]:
     return data
     
         
-def manipulate_database(data: list[dict], garden=None) -> Garden | Literal[0]:
+def manipulate_database(data: list[dict], garden=None) -> Garden | int:
     """Proceeds commands for editing / filtering / sorting / deleting
     plant data in database
     Args:
@@ -59,18 +59,19 @@ def manipulate_database(data: list[dict], garden=None) -> Garden | Literal[0]:
             command = ask_for_action(filters, garden=True)
         else:
             command: str|list = ask_for_action(filters)
-        if command == "exit" and garden is None:
+        if command[0] == "exit" and garden is None:
             return 0
-        elif command == "exit" and garden:
+        elif command[0] == "exit" and garden:
             return garden
-        elif command == "mdata":
+        elif command[0] == "mdata":
             data: list[dict] = reload_data()
-        elif command == "adata":
+        elif command[0] == "adata":
             data = reload_data()
             plant_data.show_plants(data)
-        elif command == "export":
+        elif command[0] == "export":
             name: str = get_pdf_name()
             export_data_to_pdf(data, name)
+            print(f"Your data was exported to {name}.pdf")
         elif command[0] == "sort":
             new_data: list[dict] = plant_data.sort_by_key(command[1])
             plant_data.show_plants(new_data)
@@ -100,9 +101,12 @@ def manipulate_database(data: list[dict], garden=None) -> Garden | Literal[0]:
             else:
                 print(f"No plant with ID: {command[1]} exist") 
         elif command[0] == "add":
-            plant_to_garden: Garden = add_plant_to_garden(command[1], garden)
-            if plant_to_garden:
-                garden: Garden = plant_to_garden 
+            try:
+                plant_to_garden: Garden = add_plant_to_garden(command[1], garden)
+                if plant_to_garden:
+                    garden: Garden = plant_to_garden 
+            except ValueError:
+                pass
         else:
             print("Invalid command")
             break
@@ -188,7 +192,7 @@ def add_plant_to_garden(plant_id: str, garden: Garden) -> Garden:
             raise ValueError(f"No plant with ID {plant_id} was found")
     except (ValueError, Exception) as e:
         print(e)
-        raise
+
     
 def get_pdf_name() -> str:
     """Prompt user for the pdf name, 
@@ -211,5 +215,5 @@ def export_data_to_pdf(data:list[dict], name:str) -> None:
     """
     data = PlantDataManager(data)
     data_to_export: list[dict] = data.show_plants(full=True, printed=False)
-    exp = DataToPDF(data_to_export, name)
+    exp = DataToPDF(data_to_export, filename=name)
     exp.save_data_to_pdf()

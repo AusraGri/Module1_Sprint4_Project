@@ -27,9 +27,13 @@ def add_new_plant(garden=None) -> None | Garden:
             print("Plant was saved succesfully")
             plant:dict = plant_info.plant.to_dict()
             plant_data.store_data(plant)
+            plant_count: int = PlantInfo.get_plant_count()
+            PlantInfo.save_plant_count(plant_count + 1)
         elif saving and garden:
             plant:dict = plant_info.plant.to_dict()
             plant_data.store_data(plant)
+            plant_count: int = PlantInfo.get_plant_count()
+            PlantInfo.save_plant_count(plant_count + 1)
             garden.add_plant(plant)
             print("Plant was saved succesfully and added to the garden")
         continue_adding: bool = ask_for_next()

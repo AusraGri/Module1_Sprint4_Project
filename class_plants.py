@@ -12,7 +12,7 @@ class Plant:
      VALID_KEYS: set[str] = {
         "id", "name", "variety", "scientific name", "type", 
         "height", "sowing", "flowering", "color", "light", 
-        "additional information"
+        "additional information", "scientific_name", "additional_information"
     }
 
      def __init__(self, dictionary: dict[str, str]) -> None:
@@ -23,7 +23,7 @@ class Plant:
         """
         self.validate_dictionary(dictionary)
         for key, value in dictionary.items():
-            attr_name = self.format_attribute_name(key)
+            attr_name: str = self.format_attribute_name(key)
             setattr(self, attr_name, value)
 
      def validate_dictionary(self, dictionary: dict[str, str]) -> None:
@@ -87,9 +87,8 @@ class PlantInfo:
         Returns:
             Plant: object of plant data
         """
-        plant_count: int = PlantInfo.plant_count
+        plant_count: int = PlantInfo.get_plant_count()
         plant_id: str = f"{plant_count + 1:05d}"
-        PlantInfo.plant_count = plant_count + 1
         name: str = PlantInfo.get_common_name()
         variety: str = PlantInfo.get_variety_name()
         scient_name: str = PlantInfo.get_scientific_name()
@@ -406,16 +405,6 @@ class PlantInfo:
         with open("plant_count.txt", "w") as file:
             file.write(str(count))
             
-    @property
-    def plant_count(self) -> int:
-        """Getter method for the plant count"""
-        return self.get_plant_count()
-
-    @plant_count.setter
-    def plant_count(self, count: int) -> None:
-        """Setter method for the plant count"""
-        self.set_plant_count(count)
-
     @staticmethod
     def print_listed(dictionary: dict) -> None:
         """Print collected data as dictionary before confirming it

@@ -1,14 +1,13 @@
 [
     {
-        "garden_id": "15155017",
-        "name": "dadada",
-        "date": "2024-04-15",
+        "garden_id": "16021912",
+        "name": "fake one",
+        "date": "2024-04-16",
         "garden": [
-            "00066",
-            "00065",
-            "00063",
-            "00061"
+            "00001",
+            "00002",
+            "00003"
         ],
-        "notes": "dadakjda"
+        "notes": "yes info\n"
     }
 ]

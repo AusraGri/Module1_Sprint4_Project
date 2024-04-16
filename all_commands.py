@@ -2,16 +2,12 @@ import argparse
 from ast import arg
 import re
 
-
-
 def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[str]:
     """Converst user input to a command line commands
-
     Args:
         user_input (str): user input
         filt_values (dict): posible filtering values from plant database
         garden (bool, optional): If plant database is used for Garden database, set garden to True. Defaults to False.
-
     Returns:
         str|list[str]: returns commands to process and to be excecuted
     """
@@ -25,7 +21,7 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     filt: argparse._ArgumentGroup = parser.add_argument_group("Data Filtering")
     
     # Options for Filtering
-    filt.add_argument("--filter", action="store_true", help="Enable filtering")
+    # filt.add_argument("--filter", action="store_true", help="Enable filtering")
     filt.add_argument("--type",metavar=("TYPE"), choices=types,help="Filter plant data by plant type")
     filt.add_argument("--height",metavar=("VALUE"), help="Filter plant data by plant height (cm)",type=int,)
     filt.add_argument("--name", metavar=("NAME"), help="Filter plant data by plant name", type=str)
@@ -51,7 +47,6 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     other.add_argument("--full", metavar="PLANT_ID", help="Display full information about a plant by ID", type=validate_id)
     other.add_argument("--exit", action="store_true", help="Exit the program")
     
-    
     if garden is False: #Option for delete
         delete: argparse._ArgumentGroup = parser.add_argument_group("Data Commands")
         delete.add_argument("--delete", metavar="PLANT_ID", help="Delete a plant by ID", type=validate_id)
@@ -65,33 +60,32 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     except (SystemExit, Exception):
         return 1
 
-    if args.filter:
-        if args.type:
-            return ["filter", "type", args.type]
-        elif args.height:
-            return ["filter", "height", args.height]
-        elif args.name:
-            return ["filter", "name", args.name]
-        elif args.sowing:
-            return ["filter", "sowing", args.sowing]
-        elif args.flower:
-            return ["filter", "flowering", args.flower]
-        elif args.color:
-            return ["filter", "color", args.color]
-        elif args.light:
-            return ["filter", "light", args.light]
+    if args.type:
+        return ["filter", "type", args.type]
+    elif args.height:
+        return ["filter", "height", args.height]
+    elif args.name:
+        return ["filter", "name", args.name]
+    elif args.sowing:
+        return ["filter", "sowing", args.sowing]
+    elif args.flower:
+        return ["filter", "flowering", args.flower]
+    elif args.color:
+        return ["filter", "color", args.color]
+    elif args.light:
+        return ["filter", "light", args.light]
     elif args.sort:
         return ["sort", args.sort]
     elif args.main:
-        return "mdata"
+        return ["mdata"]
     elif args.all:
-        return "adata"
+        return ["adata"]
     elif args.full:
         return ["full", str(args.full)]
     elif args.exit:
-        return "exit"
+        return ["exit"]
     elif args.export:
-        return "export"
+        return ["export"]
 
     if garden is False:
         if args.edit:
@@ -102,15 +96,11 @@ def data_commands(user_input:str, filt_values: dict, garden=False) -> str|list[s
     if garden is True:  
         if args.add:
             return ["add", str(args.add)]
- 
-
 
 def editing_commands(user_input: str) -> str|list[str]:
     """Separate Command panel for editing plant data
-
     Args:
         user_input (str): user input as string
-
     Returns:
         str|list[str]: returns commands to process and to be excecuted
     """
@@ -148,7 +138,7 @@ def editing_commands(user_input: str) -> str|list[str]:
     elif args.sowing:
         return "sowing"
     elif args.flower:
-        return "flower"
+        return "flowering"
     elif args.color:
         return "color"
     elif args.light:
@@ -160,16 +150,13 @@ def editing_commands(user_input: str) -> str|list[str]:
 
 def all_garden_commands(commands: str, open_garden=False) -> str|list[str]:
     """Command processor for Garden Database. Takes user input and returns correct commands.
-
     Args:
         commands (str): user input as string
         open_garden (bool, optional): Commands for opened Garden. Defaults to False.
-
     Returns:
         str|list[str]: returns commands to process and to be excecuted
     """
     command_line: list = commands.strip().lower().split()
-
     parser = argparse.ArgumentParser(description="Garden Menu Interface")
     
     if open_garden is False:
@@ -202,24 +189,22 @@ def all_garden_commands(commands: str, open_garden=False) -> str|list[str]:
         elif args.search:
             return ["search", args.search]
         elif args.exit:
-            return "exit"
+            return ["exit"]
     elif open_garden is True:
         if args.edit:
             return ["edit", args.edit]
         elif args.remove:
             return ["remove", args.remove]
         elif args.visual:
-            return "visual"
+            return ["visual"]
         elif args.delete:
-            return "delete"
+            return ["delete"]
         elif args.add:
-            return "add"
+            return ["add"]
         elif args.back:
-            return "back"
+            return ["back"]
         elif args.export:
-            return"export"
-        
-    
+            return ["export"]
 
 def validate_id(arg_value, pat=re.compile(r"(\d{5})$"))-> int:
     if not pat.match(arg_value):
@@ -227,4 +212,3 @@ def validate_id(arg_value, pat=re.compile(r"(\d{5})$"))-> int:
             "Invalid value. Expected a 5-character int string."
         )
     return arg_value
-
