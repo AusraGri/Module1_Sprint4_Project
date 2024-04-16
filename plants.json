@@ -63,5 +63,31 @@
         "color": "White, Blue",
         "light": "Part-Sun",
         "additional_information": ""
+    },
+    {
+        "id": "00008",
+        "name": "Roses are red",
+        "variety": "Or maybe blue",
+        "scientific_name": "",
+        "type": "Shrub",
+        "height": 60,
+        "sowing": "March, April, May",
+        "flowering": "June, July, August, September",
+        "color": "Red, Purple",
+        "light": "Full-Sun, Part-Sun",
+        "additional_information": "no additional information about fake plant"
+    },
+    {
+        "id": "00009",
+        "name": "Another fake plant",
+        "variety": "who knows",
+        "scientific_name": "Cosmos neutralis",
+        "type": "Grass",
+        "height": 100,
+        "sowing": "February, March",
+        "flowering": "April, May, June, July, August, September",
+        "color": "Green",
+        "light": "Part-Shade, Full-Shade",
+        "additional_information": "This plant is realy beautifull but fake"
     }
 ]

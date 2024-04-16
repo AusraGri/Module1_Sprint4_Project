@@ -45,12 +45,12 @@ def create_garden() -> None:
             confirmed_garden: Garden | False = confirm_garden(create_garden)
             if confirmed_garden:
                 save_garden(confirmed_garden)
-                garden_menu()
             elif not confirmed_garden:
-                garden_menu()
+                print("Garden was discarded")
+    # garden_menu()
 
 
-def check_if_data_exists(filename: str) -> list[dict] | False:
+def check_if_data_exists(filename: str) -> list[dict] | Literal[False]:
     """Checks if data file exists
     Args:
         filename (str): filename of the data file
@@ -71,17 +71,20 @@ def check_if_data_exists(filename: str) -> list[dict] | False:
 def all_gardens_menu() -> None:
     """Shows all existing gardens and accepts commands for interaction with gardens"""
     data: list[dict] | False = check_if_data_exists("gardens.json")
+    if not data:
+        print("No data in gardens. Please create garden first")
     while data and True:
         print(">>>>>>ALL GARDENS<<<<<<<")
         data = show_all_gardens(data)
         command: str | list[str] = get_garden_command()
-        if command == "exit":
-            break
-        elif command == 1:
+        if command == 1:
             pass
+        elif command[0] == "exit":
+            break
         elif command[0] == "open":
             if garden := find_garden(data, command[1].strip()):
                 garden_data_manipulation(garden)
+                data = check_if_data_exists("gardens.json")
             else:
                 print(f"No garden with ID: {command[1]} was found")
         elif command[0] == "sort":
@@ -110,7 +113,7 @@ def find_garden(gardens: list[dict], garden_id: str) -> Garden | None:
             return Garden(garden)
 
 
-def search_for_garden_name(gardens: list[dict], name: str) -> list | False:
+def search_for_garden_name(gardens: list[dict], name: str) -> list | Literal[False]:
     """Seach for garden by garden name
     Args:
         gardens (list[dict]): garden data to search in
@@ -164,18 +167,18 @@ def garden_data_manipulation(garden: Garden) -> None:
         command: str | list[str] = get_garden_command(open_garden=True)
         if command == 1:
             pass
-        elif command == "back":
+        elif command[0] == "back":
             break
-        elif command == "visual":
+        elif command[0] == "visual":
             visualize_garden(garden)
-        elif command == "export":
+        elif command[0] == "export":
             name: str = get_name("Name PDF file: ")
             export_garden_pdf(garden, name)
             print("Garden was succesfuly exported")
-        elif command == "add":
+        elif command[0] == "add":
             updated_garden: Garden = add_plant_to_garden(garden)
             garden = updated_garden
-        elif command == "delete":
+        elif command[0] == "delete":
             if confirm_to_delete(garden):
                 all_gardens_menu()
                 break
@@ -188,7 +191,7 @@ def garden_data_manipulation(garden: Garden) -> None:
             garden.garden = garden.remove_plant(command[1])
 
 
-def confirm_to_delete(garden: Garden) -> True | None:
+def confirm_to_delete(garden: Garden) -> Literal[True] | None:
     """Confirmation for deleting the garden from database
     Args:
         garden (Garden): Garden object to delete
@@ -213,7 +216,7 @@ def edit_garden_data(garden: Garden, data_name: str) -> Garden:
     Returns:
         Garden: returns edited Garden object
     """
-    file = DataHandler("gardens.json")
+    garden_file = DataHandler("gardens.json")
     if data_name == "name":
         new_name: str = get_name("New Garden name:")
         garden.name = new_name
@@ -224,7 +227,7 @@ def edit_garden_data(garden: Garden, data_name: str) -> Garden:
             new_notes: str = text.read_text()
             garden.notes = new_notes
     updated_garden: dict = garden.to_dict()
-    file.update_file(updated_garden)
+    garden_file.update_file(updated_garden)
     return garden
 
 
@@ -255,7 +258,7 @@ def get_garden_command(open_garden=False) -> str | list[str]:
             print(e)
 
 
-def show_all_gardens(gardens=None) -> list[dict] | False:
+def show_all_gardens(gardens=None) -> list[dict] | Literal[False]:
     """Print all gardens in the database in table format
     Args:
         gardens (list[dict], optional): Garden data to show. 
