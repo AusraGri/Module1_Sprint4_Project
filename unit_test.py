@@ -1,6 +1,6 @@
 import pytest
 from garden_database import find_garden, search_for_garden_name, sort_garden
-from class_Garden import Garden
+from class_garden import Garden
 
 @pytest.fixture
 def sample_garden_data():
