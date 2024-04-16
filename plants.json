@@ -89,5 +89,18 @@
         "color": "Green",
         "light": "Part-Shade, Full-Shade",
         "additional_information": "This plant is realy beautifull but fake"
+    },
+    {
+        "id": "00010",
+        "name": "New testing plant",
+        "variety": "Roses",
+        "scientific_name": "Moses",
+        "type": "Bulb",
+        "height": 30,
+        "sowing": "April, May",
+        "flowering": "April, May, June",
+        "color": "White",
+        "light": "Full-Sun",
+        "additional_information": "no info"
     }
 ]

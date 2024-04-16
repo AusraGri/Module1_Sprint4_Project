@@ -9,5 +9,24 @@
             "00003"
         ],
         "notes": "yes info\n"
+    },
+    {
+        "garden_id": "16125919",
+        "name": "New Garden TEst",
+        "date": "2024-04-16",
+        "garden": [
+            "00010",
+            "00009"
+        ],
+        "notes": "No information"
+    },
+    {
+        "garden_id": "16130046",
+        "name": "dada",
+        "date": "2024-04-16",
+        "garden": [
+            "00009"
+        ],
+        "notes": "no"
     }
 ]

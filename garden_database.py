@@ -46,7 +46,8 @@ def create_garden() -> None:
             if confirmed_garden:
                 save_garden(confirmed_garden)
             elif not confirmed_garden:
-                garden_menu()
+                print("Garden discarded")
+                
 
 
 def check_if_data_exists(filename: str) -> list[dict] | Literal[False]:
