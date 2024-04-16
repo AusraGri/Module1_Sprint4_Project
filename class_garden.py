@@ -1,5 +1,5 @@
 from class_PlantDataManager import PlantDataManager
-from class_Plants import Plant
+from class_plants import Plant
 from datetime import datetime
 from tabulate import tabulate
 

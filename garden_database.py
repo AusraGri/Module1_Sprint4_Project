@@ -50,7 +50,7 @@ def create_garden() -> None:
                 garden_menu()
 
 
-def check_if_data_exists(filename: str) -> list[dict] | False:
+def check_if_data_exists(filename: str) -> list[dict] | Literal[False]:
     """Checks if data file exists
     Args:
         filename (str): filename of the data file
@@ -110,7 +110,7 @@ def find_garden(gardens: list[dict], garden_id: str) -> Garden | None:
             return Garden(garden)
 
 
-def search_for_garden_name(gardens: list[dict], name: str) -> list | False:
+def search_for_garden_name(gardens: list[dict], name: str) -> list | Literal[False]:
     """Seach for garden by garden name
     Args:
         gardens (list[dict]): garden data to search in
@@ -188,7 +188,7 @@ def garden_data_manipulation(garden: Garden) -> None:
             garden.garden = garden.remove_plant(command[1])
 
 
-def confirm_to_delete(garden: Garden) -> True | None:
+def confirm_to_delete(garden: Garden) -> True | Literal[None]:
     """Confirmation for deleting the garden from database
     Args:
         garden (Garden): Garden object to delete
@@ -255,7 +255,7 @@ def get_garden_command(open_garden=False) -> str | list[str]:
             print(e)
 
 
-def show_all_gardens(gardens=None) -> list[dict] | False:
+def show_all_gardens(gardens=None) -> list[dict] | Literal[False]:
     """Print all gardens in the database in table format
     Args:
         gardens (list[dict], optional): Garden data to show. 

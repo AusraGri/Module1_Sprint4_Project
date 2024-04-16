@@ -1,4 +1,4 @@
-from class_Plants import PlantInfo
+from class_plants import PlantInfo
 from class_DataHandler import DataHandler
 from helpers import Sep
 from class_Garden import Garden

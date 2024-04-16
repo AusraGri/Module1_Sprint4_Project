@@ -41,7 +41,7 @@ def reload_data() -> list[dict]:
     return data
     
         
-def manipulate_database(data: list[dict], garden=None) -> Garden | 0:
+def manipulate_database(data: list[dict], garden=None) -> Garden | Literal[0]:
     """Proceeds commands for editing / filtering / sorting / deleting
     plant data in database
     Args:

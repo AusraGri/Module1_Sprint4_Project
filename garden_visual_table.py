@@ -1,6 +1,6 @@
 from typing import LiteralString
 from class_PlantDataManager import PlantDataManager
-from class_Plants import Plant
+from class_plants import Plant
 from tabulate import tabulate
 from colorist import BgColorRGB
 

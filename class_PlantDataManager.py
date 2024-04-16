@@ -1,7 +1,7 @@
 from typing import Literal
 from class_DataHandler import DataHandler
-from command_tables import tabulate
-from class_Plants import Plant, PlantInfo
+from tabulate import tabulate
+from class_plants import Plant, PlantInfo
 
 """For working with plant database: soting/ filterins / editing data in plant database
 """
