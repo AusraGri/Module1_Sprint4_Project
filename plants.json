@@ -89,5 +89,18 @@
         "color": "Green",
         "light": "Part-Shade, Full-Shade",
         "additional_information": "This plant is realy beautifull but fake"
+    },
+    {
+        "id": "00010",
+        "name": "fake plant r",
+        "variety": "raise",
+        "scientific_name": "error",
+        "type": "Shrub",
+        "height": 44,
+        "sowing": "January, February",
+        "flowering": "April, May, June",
+        "color": "Purple",
+        "light": "Part-Shade",
+        "additional_information": "no"
     }
 ]
