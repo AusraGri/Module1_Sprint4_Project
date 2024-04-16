@@ -2,7 +2,7 @@ from tabulate import tabulate
 from typing import Literal
 from datetime import datetime
 from class_DataToPDF import DataToPDF
-from class_Garden import Garden
+from class_garden import Garden
 from class_DataHandler import DataHandler
 from class_PlantDataManager import PlantDataManager
 from add_plant import add_new_plant, ask_for_next
